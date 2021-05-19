@@ -6,11 +6,15 @@ import javax.swing.JOptionPane;
 
 public class login extends javax.swing.JFrame {
 
+    //Creacion de variables SQL //
     ConexionSQL cc = new ConexionSQL();
-    Connection con = (Connection) cc.conexion();
+    java.sql.Connection con = (Connection) cc.conexion();
 
     public login() {
         initComponents();
+        //Centrar ventana y titulo
+        setLocationRelativeTo(null);
+        setTitle("Gestor de Turnos");
     }
 
 
@@ -35,12 +39,18 @@ public class login extends javax.swing.JFrame {
         });
 
         btnIngresar.setText("INGRESAR");
+        btnIngresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIngresarActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setText("USUARIO:");
+        jLabel1.setText("USUARIO");
 
-        jLabel2.setText("CONTRASEÑA:");
+        jLabel2.setText("CONTRASEÑA");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("GESTOR DE TURNOS");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -54,17 +64,16 @@ public class login extends javax.swing.JFrame {
                         .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(94, 94, 94)
                         .addComponent(btnRegistrarse, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel3)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel2))
-                            .addGap(36, 36, 36)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtUsuario)
-                                .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addGap(52, 52, 52)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(35, Short.MAX_VALUE))
+            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -90,70 +99,50 @@ public class login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
-        agregarUsuario();
+        //Abre la ventana del nuevo registro.
+        registro1 formulario = new registro1();
+        formulario.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnRegistrarseActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public void agregarUsuario() {
+    private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
 
-        String password = String.valueOf(txtContrasena.getPassword());
-        String SQL = "INSERT INTO usuarios (nombre, contrasena) VALUES (?,?)";
+        validarUsuario();
+    }//GEN-LAST:event_btnIngresarActionPerformed
 
-        try {
-            PreparedStatement pst = con.prepareStatement(SQL);
-
-            pst = con.prepareStatement(SQL);
-            pst.setString(1, txtUsuario.getText());
-            pst.setString(2, password);
-
-            pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Usuario creado exitosamente.");
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error de registro" + e.getMessage());
-
-        }
-
-    }
-
-    
     public void validarUsuario() {
 
         int resultado = 0;
-        String password = String.valueOf(txtContrasena.getPassword());
-        String usuario = txtUsuario.getText();
-        String SQL = "SELECT * FROM usuarios WHERE nombre='"+usuario+"' and contrasena='"+password+"' ";
 
         try {
+            String usuario = txtUsuario.getText();
+            String password = String.valueOf(txtContrasena.getPassword());
+            String SQL = "SELECT * FROM usuarios WHERE nombre='" + usuario + "' and contrasena='" + password + "' ";
+            //Objeto para creear la conexion.
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(SQL);
-            
-            if(rs.next()){
+
+            if (rs.next()) {
                 resultado = 1;
-                if(resultado == 1){
-                    
-                    //cambiar este formulario una vez que se arme el proximo Jpanel
+                if (resultado == 1) {
+                    //Cerramos esta ventana y abrimos la de sistema.
                     sistema form = new sistema();
                     form.setVisible(true);
                     this.dispose();
                 }
+            }else {
+                JOptionPane.showMessageDialog(null, "Error de Acceso, Usuario no registrado.");
+                txtUsuario.setText(null);
+                txtContrasena.setText(null);
             }
-
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,"Error de Acceso, Usuario no registrado.");
+            JOptionPane.showMessageDialog(null, "Error de Acceso, Usuario no registrado." + e.getMessage());
 
         }
-
     }
-    
+
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -170,9 +159,7 @@ public class login extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new login().setVisible(true);

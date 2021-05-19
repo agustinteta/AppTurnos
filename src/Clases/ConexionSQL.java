@@ -1,27 +1,29 @@
 package Clases;
 
-import com.sun.jdi.connect.spi.Connection;
 import javax.swing.JOptionPane;
-import java.sql.DriverManager;
+import java.sql.*;
 
 public class ConexionSQL {
 
-    Connection conectar = null;
+    private static java.sql.Connection conectar = null;
 
-    public static final String URL = "jdbc:mysql://localhost:3306/gestiondeturnos";
-    public static final String USERNAME = "root";
-    public static final String PASSWORD = "12345";
-
-    public Connection conexion() {
+    private final String NOMBREBD = "gestiondeturnos"; //Nombre base de datos
+    private final String USERNAME = "root"; //Usuario
+    private final String PASSWORD = "1234"; //Contrasena usuario root
+    private final String URL = "jdbc:mysql://localhost:3306/"+NOMBREBD+"?useUnicode=true&use" //direccion de la base de datos
+                   + "JDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&"
+                   + "serverTimezone=UTC";
+    
+    public java.sql.Connection conexion() {
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conectar = (Connection) DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conectar = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            //JOptionPane.showMessageDialog(null, "Conexion exitosa.\n");
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error de conexion" + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error de conexion. " + e.getMessage());
         }
-        return conectar;
+        return (java.sql.Connection) conectar;
     }
-
 }
