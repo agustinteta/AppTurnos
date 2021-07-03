@@ -1,5 +1,6 @@
 package Interfaz;
 
+import Clases.Usuario;
 import Clases.ConexionSQL;
 import java.sql.*;
 import javax.swing.JOptionPane;
@@ -9,14 +10,15 @@ public class login extends javax.swing.JFrame {
     //Creacion de variables SQL //
     ConexionSQL cc = new ConexionSQL();
     java.sql.Connection con = (Connection) cc.conexion();
-
+    
     public login() {
         initComponents();
         //Centrar ventana y titulo
         setLocationRelativeTo(null);
         setTitle("Gestor de Turnos");
+        
     }
-
+    
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -107,40 +109,17 @@ public class login extends javax.swing.JFrame {
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
 
-        validarUsuario();
+        Usuario user = new Usuario(txtUsuario.getText(), txtContrasena.getText());
+
+        if (user.validarUsuario()) {
+            sistema form = new sistema(user.getIdUsuario(txtUsuario.getText()));
+            form.setVisible(true);
+            this.dispose();
+        }
+
     }//GEN-LAST:event_btnIngresarActionPerformed
 
-    public void validarUsuario() {
-
-        int resultado = 0;
-
-        try {
-            String usuario = txtUsuario.getText();
-            String password = String.valueOf(txtContrasena.getPassword());
-            String SQL = "SELECT * FROM usuarios WHERE nombre='" + usuario + "' and contrasena='" + password + "' ";
-            //Objeto para creear la conexion.
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(SQL);
-
-            if (rs.next()) {
-                resultado = 1;
-                if (resultado == 1) {
-                    //Cerramos esta ventana y abrimos la de sistema.
-                    sistema form = new sistema();
-                    form.setVisible(true);
-                    this.dispose();
-                }
-            }else {
-                JOptionPane.showMessageDialog(null, "Error de Acceso, Usuario no registrado.");
-                txtUsuario.setText(null);
-                txtContrasena.setText(null);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error de Acceso, Usuario no registrado." + e.getMessage());
-
-        }
-    }
-
+    
     public static void main(String args[]) {
 
         try {

@@ -1,6 +1,7 @@
 package Interfaz;
 
 import Clases.ConexionSQL;
+import Clases.Usuario;
 import java.sql.*;
 import javax.swing.JOptionPane;
 
@@ -9,15 +10,15 @@ public class registro1 extends javax.swing.JFrame {
     //Creacion de variables SQL
     ConexionSQL cc = new ConexionSQL();
     java.sql.Connection con = (Connection) cc.conexion();
-    
+
     //Constructor de la clase
     public registro1() {
-        
+
         initComponents();
         //Centrar ventana y titulo
-        setLocationRelativeTo(null);       
+        setLocationRelativeTo(null);
         setTitle("Formulario de Registro");
-    
+
     }
 
 
@@ -157,7 +158,19 @@ public class registro1 extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        agregarUsuario();
+       
+        Usuario usuario = new Usuario(txtNombre.getText(), String.valueOf(txtContrasena.getPassword()), Integer.parseInt(txtDni.getText()));
+
+        System.out.println(usuario.getNombre());
+        System.out.println(usuario.getDni());
+        System.out.println(usuario.getPassword());
+
+        if (usuario.agregarUsuario()) {
+            login login = new login();
+            login.setVisible(true);
+            this.dispose();
+        }
+
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
@@ -181,7 +194,7 @@ public class registro1 extends javax.swing.JFrame {
 
             pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "Usuario creado exitosamente.");
-            
+
             login login = new login();
             login.setVisible(true);
             this.dispose();
