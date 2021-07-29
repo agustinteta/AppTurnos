@@ -1,23 +1,19 @@
 package Interfaz;
 
+import Clases.Turno;
 import Clases.ConexionSQL;
 import java.sql.*;
-import java.text.SimpleDateFormat;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class sistema extends javax.swing.JFrame {
 
-    //Creacion de variables SQL
-    ConexionSQL cc = new ConexionSQL();
-    java.sql.Connection con = (Connection) cc.conexion();
     int idUsuario;
 
     public sistema(int idUsuario) {
         initComponents();
         //Centrar ventana y titulo
         setLocationRelativeTo(null); //Centrar ventana
-        setTitle("Sistema"); //Titulo
+        setTitle("Sistema - Gestor de Turnos"); //Titulo
         this.idUsuario = idUsuario;
         cargarTabla(idUsuario);
 
@@ -35,11 +31,11 @@ public class sistema extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         ftxtFecha = new javax.swing.JFormattedTextField();
-        ftxtHora = new javax.swing.JFormattedTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         txtDni = new javax.swing.JTextField();
+        jComboHora = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -119,21 +115,9 @@ public class sistema extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        ftxtFecha.setText("    -  -  "); // NOI18N
         ftxtFecha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ftxtFechaActionPerformed(evt);
-            }
-        });
-
-        try {
-            ftxtHora.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        ftxtHora.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ftxtHoraActionPerformed(evt);
             }
         });
 
@@ -153,6 +137,13 @@ public class sistema extends javax.swing.JFrame {
             }
         });
 
+        jComboHora.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14.30", "15:00", "15:30", "16:00", "16:30" }));
+        jComboHora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboHoraActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -166,20 +157,20 @@ public class sistema extends javax.swing.JFrame {
                             .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(74, 74, 74)
+                            .addGap(71, 71, 71)
                             .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel4)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4))
                         .addGap(76, 76, 76)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ftxtHora, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ftxtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtDni, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                            .addComponent(ftxtFecha, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                            .addComponent(jComboHora, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(17, 17, 17)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -200,16 +191,16 @@ public class sistema extends javax.swing.JFrame {
                     .addComponent(ftxtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ftxtHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(24, 24, 24)
+                    .addComponent(jLabel4)
+                    .addComponent(jComboHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar)
                     .addComponent(btnEliminar)
                     .addComponent(btnModificar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollTable, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
@@ -219,7 +210,6 @@ public class sistema extends javax.swing.JFrame {
         txtNombre.setText("");
         txtDni.setText("");
         ftxtFecha.setText("");
-        ftxtHora.setText("");
     }
 
     private void cargarTabla(int idUsuario) {
@@ -285,7 +275,6 @@ public class sistema extends javax.swing.JFrame {
                 txtNombre.setText(rs.getString("nombre"));
                 txtDni.setText(rs.getString("dni"));
                 ftxtFecha.setText(rs.getString("dia_turno"));
-                ftxtHora.setText(rs.getString("hora_turno"));
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -293,107 +282,47 @@ public class sistema extends javax.swing.JFrame {
 
     }
 
-    public void agregarTurno(int idUsuario) {
-
-        String SQL = "CALL insertarEnTurnos_sp (?,?,?,?,?,?)";
-        java.util.Date date = new java.util.Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        try {
-            PreparedStatement ps = con.prepareStatement(SQL);
-
-            ps = con.prepareStatement(SQL);
-            ps.setInt(1, idUsuario);
-            ps.setString(2, txtNombre.getText());
-            ps.setString(3, txtDni.getText());
-            ps.setString(4, formatter.format(date));
-            ps.setString(5, ftxtHora.getText());
-            ps.setString(6, ftxtFecha.getText());
-            ps.executeUpdate();
-
-            JOptionPane.showMessageDialog(null, "Turno cargado exitosamente. ");
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error de registro. " + e.getMessage());
-        }
-
-    }
-
-    private void eliminarTurno() {
-
-        PreparedStatement ps = null;
-        try {
-            ConexionSQL cc = new ConexionSQL();
-            java.sql.Connection con = (Connection) cc.conexion();
-
-            int fila = tableTurnos.getSelectedRow();
-            String idTurno = tableTurnos.getValueAt(fila, 0).toString();
-
-            String SQL = "DELETE FROM turnos WHERE idturno=?";
-
-            ps = con.prepareStatement(SQL);
-            ps.setString(1, idTurno);
-            ps.execute();
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-    }
-
-    private void modificarTurno() {
-        PreparedStatement ps = null;
-        try {
-            ConexionSQL cc = new ConexionSQL();
-            java.sql.Connection con = (Connection) cc.conexion();
-
-            int fila = tableTurnos.getSelectedRow();
-            String idTurno = tableTurnos.getValueAt(fila, 0).toString();
-
-            String SQL = "UPDATE turnos SET nombre=?, dni=?, dia_turno=?, hora_turno=? WHERE idturno=" + idTurno;
-            ps = con.prepareStatement(SQL);
-            
-            ps.setString(1, txtNombre.getText());
-            ps.setString(2, txtDni.getText());
-            ps.setString(3, ftxtFecha.getText());
-            ps.setString(4, ftxtHora.getText());
-            
-            ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "El turno se modifico satisfactoriamente.");
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        eliminarTurno();
-        cargarTabla(idUsuario);
-        limpiarCampos();
+        int fila = tableTurnos.getSelectedRow();
+        int opcion = jComboHora.getSelectedIndex();
+        Turno turno = new Turno(idUsuario, Integer.parseInt(tableTurnos.getValueAt(fila, 0).toString()), txtNombre.getText(),
+                Integer.parseInt(txtDni.getText()), jComboHora.getItemAt(opcion).toString(), ftxtFecha.getText());
+
+        if (turno.eliminarTurno(turno.getIdTurno())) {
+            limpiarCampos();
+            cargarTabla(turno.getIdUsuario());
+        }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         // TODO add your handling code here:
-        agregarTurno(idUsuario);
-        cargarTabla(idUsuario);
-        limpiarCampos();
+        int opcion = jComboHora.getSelectedIndex();
+        Turno turno = new Turno(idUsuario, txtNombre.getText(), Integer.parseInt(txtDni.getText()), jComboHora.getItemAt(opcion).toString(), ftxtFecha.getText());
+        if (turno.agregarTurno()) {
+            limpiarCampos();
+            cargarTabla(turno.getIdUsuario());
+        }
+
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
-        modificarTurno();
-        cargarTabla(idUsuario);
-        limpiarCampos();
+        int fila = tableTurnos.getSelectedRow();
+        int opcion = jComboHora.getSelectedIndex();
+        Turno turno = new Turno(idUsuario, Integer.parseInt(tableTurnos.getValueAt(fila, 0).toString()), txtNombre.getText(),
+                Integer.parseInt(txtDni.getText()), jComboHora.getItemAt(opcion).toString(), ftxtFecha.getText());
+
+        if (turno.modificarTurno(turno.getIdTurno())) {
+            limpiarCampos();
+            cargarTabla(turno.getIdUsuario());
+        }
+
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void ftxtFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ftxtFechaActionPerformed
 
     }//GEN-LAST:event_ftxtFechaActionPerformed
-
-    private void ftxtHoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ftxtHoraActionPerformed
-
-    }//GEN-LAST:event_ftxtHoraActionPerformed
 
     private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
 
@@ -407,23 +336,18 @@ public class sistema extends javax.swing.JFrame {
         getDatos();
     }//GEN-LAST:event_tableTurnosMouseClicked
 
-    /*
-    public static void main(String args[]) {
+    private void jComboHoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboHoraActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jComboHoraActionPerformed
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new sistema().setVisible(true);
 
-            }
-        });
-    }
-    */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JFormattedTextField ftxtFecha;
-    private javax.swing.JFormattedTextField ftxtHora;
+    private javax.swing.JComboBox<String> jComboHora;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -5,19 +5,19 @@ import Clases.Usuario;
 import java.sql.*;
 import javax.swing.JOptionPane;
 
-public class registro1 extends javax.swing.JFrame {
+public class registro extends javax.swing.JFrame {
 
     //Creacion de variables SQL
     ConexionSQL cc = new ConexionSQL();
     java.sql.Connection con = (Connection) cc.conexion();
 
     //Constructor de la clase
-    public registro1() {
+    public registro() {
 
         initComponents();
         //Centrar ventana y titulo
         setLocationRelativeTo(null);
-        setTitle("Formulario de Registro");
+        setTitle("Formulario de Registro - Gestor de Turnos");
 
     }
 
@@ -161,10 +161,6 @@ public class registro1 extends javax.swing.JFrame {
        
         Usuario usuario = new Usuario(txtNombre.getText(), String.valueOf(txtContrasena.getPassword()), Integer.parseInt(txtDni.getText()));
 
-        System.out.println(usuario.getNombre());
-        System.out.println(usuario.getDni());
-        System.out.println(usuario.getPassword());
-
         if (usuario.agregarUsuario()) {
             login login = new login();
             login.setVisible(true);
@@ -179,41 +175,6 @@ public class registro1 extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
-    public void agregarUsuario() {
-
-        String password = String.valueOf(txtContrasena.getPassword());
-        String SQL = "INSERT INTO usuarios (dni, nombre, contrasena) VALUES (?,?,?)";
-
-        try {
-            PreparedStatement pst = con.prepareStatement(SQL);
-
-            pst = con.prepareStatement(SQL);
-            pst.setString(1, txtDni.getText());
-            pst.setString(2, txtNombre.getText());
-            pst.setString(3, password);
-
-            pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Usuario creado exitosamente.");
-
-            login login = new login();
-            login.setVisible(true);
-            this.dispose();
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error de registro" + e.getMessage());
-
-        }
-
-    }
-
-    public static void main(String args[]) {
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new registro1().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConfirmar;

@@ -6,18 +6,18 @@ import javax.swing.JOptionPane;
 
 public class Usuario {
 
-    //atributos de la clase usuario
+    //Atributos de la clase usuario
     private String nombre;
     private String contrasena;
     private int dni;
 
-    //variables SQL
+    //Variables SQL
     ConexionSQL cc = new ConexionSQL();
     java.sql.Connection con = (Connection) cc.conexion();
 
     //CONSTRUCTORES PARA LA CLASE USUARIOS.
-    public Usuario(String nombre, String contrasena) {
-        this.nombre = nombre;
+    public Usuario(String dni, String contrasena) {
+        this.dni = Integer.parseInt(dni);
         this.contrasena = contrasena;
     }
 
@@ -27,7 +27,7 @@ public class Usuario {
         this.dni = dni;
     }
 
-    //FUNCIONES GETTERS
+    //METODOS GETTERS
     public String getNombre() {
         return nombre;
     }
@@ -40,7 +40,7 @@ public class Usuario {
         return contrasena;
     }
 
-    //FUNCIONES SETTERS
+    //METODOS SETTERS
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -53,11 +53,11 @@ public class Usuario {
         this.contrasena = password;
     }
 
-    //FUNCION PARA OBTENER EL ID DE UN USUARIO
-    public int getIdUsuario(String nombreUsuario) {
+    //METODO PARA OBTENER EL ID DE UN USUARIO
+    public int getIdUsuario(int dni) {
         int id = -1;
         try {
-            String SQL = "SELECT idusuario FROM usuarios WHERE nombre='" + nombreUsuario + "' ";
+            String SQL = "SELECT idusuario FROM usuarios WHERE dni='" + dni + "' ";
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(SQL);
             rs.next();
@@ -68,10 +68,10 @@ public class Usuario {
         return id;
     }
 
-    //FUNCION PARA VALIDAR USUARIO
+    //METODO PARA VALIDAR USUARIO
     public boolean validarUsuario() {
         try {
-            String SQL = "SELECT * FROM usuarios WHERE nombre='" + this.nombre + "' and contrasena='" + this.contrasena + "' ";
+            String SQL = "SELECT * FROM usuarios WHERE dni='" + this.dni + "' and contrasena='" + this.contrasena + "' ";
             //Objeto para creear la conexion.
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(SQL);
@@ -86,7 +86,7 @@ public class Usuario {
         return false;
     }
 
-    //
+    //METODO PARA AGREGAR USUARIO
     public boolean agregarUsuario() {
 
         String SQL = "INSERT INTO usuarios (dni, nombre, contrasena) VALUES (?,?,?)";

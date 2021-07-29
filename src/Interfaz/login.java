@@ -15,7 +15,7 @@ public class login extends javax.swing.JFrame {
         initComponents();
         //Centrar ventana y titulo
         setLocationRelativeTo(null);
-        setTitle("Gestor de Turnos");
+        setTitle("Login - Gestor de Turnos");
         
     }
     
@@ -25,7 +25,7 @@ public class login extends javax.swing.JFrame {
 
         btnRegistrarse = new javax.swing.JButton();
         btnIngresar = new javax.swing.JButton();
-        txtUsuario = new javax.swing.JTextField();
+        txtDni = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtContrasena = new javax.swing.JPasswordField();
@@ -47,7 +47,13 @@ public class login extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("USUARIO");
+        txtDni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDniActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("DNI");
 
         jLabel2.setText("CONTRASEÑA");
 
@@ -73,7 +79,7 @@ public class login extends javax.swing.JFrame {
                         .addGap(52, 52, 52)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(35, Short.MAX_VALUE))
             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -85,7 +91,7 @@ public class login extends javax.swing.JFrame {
                 .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -102,22 +108,26 @@ public class login extends javax.swing.JFrame {
 
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
         //Abre la ventana del nuevo registro.
-        registro1 formulario = new registro1();
+        registro formulario = new registro();
         formulario.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnRegistrarseActionPerformed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
 
-        Usuario user = new Usuario(txtUsuario.getText(), txtContrasena.getText());
+        Usuario usuario = new Usuario(txtDni.getText(), String.valueOf(txtContrasena.getPassword()));
 
-        if (user.validarUsuario()) {
-            sistema form = new sistema(user.getIdUsuario(txtUsuario.getText()));
+        if (usuario.validarUsuario()) {
+            sistema form = new sistema(usuario.getIdUsuario(Integer.parseInt(txtDni.getText())));
             form.setVisible(true);
             this.dispose();
         }
 
     }//GEN-LAST:event_btnIngresarActionPerformed
+
+    private void txtDniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDniActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDniActionPerformed
 
     
     public static void main(String args[]) {
@@ -153,6 +163,6 @@ public class login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPasswordField txtContrasena;
-    private javax.swing.JTextField txtUsuario;
+    private javax.swing.JTextField txtDni;
     // End of variables declaration//GEN-END:variables
 }
