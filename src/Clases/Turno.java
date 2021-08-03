@@ -1,7 +1,6 @@
 package Clases;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 
@@ -88,6 +87,11 @@ public class Turno {
     }
 
     //OTROS METODOS
+    
+    //METODO UTILIZADO PARA LA CARGA DE LOS TURNOS, ESTA REALIZADA A TRAVES DE 
+    //UN PROCEDIMIENTO ALMACENADO EN MYSQL
+    //RETORNA TRUE SI EL TURNO ES CARGADO CORRECTAMENTE
+    //RETORNA FALSE SI NO ES POSIBLE LA CARGA
     public boolean agregarTurno() {
 
         String SQL = "CALL insertarEnTurnos_sp (?,?,?,?,?,?)";
@@ -114,7 +118,12 @@ public class Turno {
         }
         return false;
     }
-
+    
+    
+    //METODO UTILIZADO PARA LA MODIFICACION DE LOS TURNOS 
+    //RECIBE COMO PARAMETRO EL IDTURNO
+    //RETORNA TRUE SI EL TURNO ES MODIFICADO CORRECTAMENTE 
+    //RETORNA FALSE SI NO ES POSIBLE MODIFICAR
     public boolean modificarTurno(int idTurno) {
         PreparedStatement ps = null;
         try {
@@ -135,7 +144,10 @@ public class Turno {
         }
         return false;
     }
-
+    
+    //METODO UTILIZADO PARA LA ELIMINACION DE LOS TURNOS, RECIBE IDTURNO
+    //DEVUELVE TRUE SI ES ELIMINADO CORRECTAMENTE
+    //DEVUELVE FALSE SI NO ES POSIBLE LLEVAR A CABO LA ACCION
     public boolean eliminarTurno(int idTurno) {
         PreparedStatement ps = null;
         try {
@@ -153,4 +165,25 @@ public class Turno {
         return false;
     }
 
+    //METODO UTILIZADO PARA CONTROLAR LA DISPONIBILIDAD DE TURNOS
+    //DEVUELVE FALSE SI EXISTE UN TURNO CARGADO A LA MISMA HORA Y MISMO DIA
+    //EN CASO DE EL HORARIO ESTE DISPONIBLE, DEVUELVE TRUE
+    public boolean validarDisponibilidadTurno(){
+        try{
+            String SQL = "SELECT * FROM turnos WHERE idusuario='" + this.idUsuario + "' and hora_turno='" + this.horaTurno + "' and dia_turno='" + this.fechaTurno + "'";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(SQL);
+            if(rs.next()){
+                JOptionPane.showMessageDialog(null, "El horario no se encuentra disponible, por favor seleccione otro.");
+                return false;
+            }
+            }catch (Exception e){
+                JOptionPane.showMessageDialog(null, e);
+        }
+        return true;
+    }
+    
+    
+    
+    
 }

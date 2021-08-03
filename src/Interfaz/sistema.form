@@ -55,6 +55,13 @@
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
+              <Component id="btnMostrarDia" min="-2" pref="133" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+              <Component id="btnMostrarTodo" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -88,7 +95,12 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="scrollTable" min="-2" pref="202" max="-2" attributes="0"/>
-              <EmptySpace pref="14" max="32767" attributes="0"/>
+              <EmptySpace pref="7" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnMostrarTodo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnMostrarDia" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -125,7 +137,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="tableTurnos">
+        <Component class="javax.swing.JTable" name="jTableTurnos">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="5" rowCount="10">
@@ -170,7 +182,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tableTurnosMouseClicked"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTableTurnosMouseClicked"/>
           </Events>
         </Component>
       </SubComponents>
@@ -232,7 +244,7 @@
             <StringItem index="10" value="13:00"/>
             <StringItem index="11" value="13:30"/>
             <StringItem index="12" value="14:00"/>
-            <StringItem index="13" value="14.30"/>
+            <StringItem index="13" value="14:30"/>
             <StringItem index="14" value="15:00"/>
             <StringItem index="15" value="15:30"/>
             <StringItem index="16" value="16:00"/>
@@ -246,6 +258,22 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnMostrarTodo">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="TODOS LOS TURNOS"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMostrarTodoActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnMostrarDia">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="TURNOS DEL DIA"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMostrarDiaActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

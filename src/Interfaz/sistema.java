@@ -3,19 +3,23 @@ package Interfaz;
 import Clases.Turno;
 import Clases.ConexionSQL;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import javax.swing.table.DefaultTableModel;
 
 public class sistema extends javax.swing.JFrame {
-
+    
+    //ATRIBUTO
     int idUsuario;
-
+    
+    //CONSTRUCTOR
     public sistema(int idUsuario) {
         initComponents();
         //Centrar ventana y titulo
         setLocationRelativeTo(null); //Centrar ventana
         setTitle("Sistema - Gestor de Turnos"); //Titulo
         this.idUsuario = idUsuario;
-        cargarTabla(idUsuario);
+        jTableTurnos.setAutoCreateRowSorter(true);
+        
 
     }
 
@@ -27,7 +31,7 @@ public class sistema extends javax.swing.JFrame {
         btnAgregar = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         scrollTable = new javax.swing.JScrollPane();
-        tableTurnos = new javax.swing.JTable();
+        jTableTurnos = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         ftxtFecha = new javax.swing.JFormattedTextField();
@@ -36,6 +40,8 @@ public class sistema extends javax.swing.JFrame {
         txtNombre = new javax.swing.JTextField();
         txtDni = new javax.swing.JTextField();
         jComboHora = new javax.swing.JComboBox<>();
+        btnMostrarTodo = new javax.swing.JButton();
+        btnMostrarDia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,7 +66,7 @@ public class sistema extends javax.swing.JFrame {
             }
         });
 
-        tableTurnos.setModel(new javax.swing.table.DefaultTableModel(
+        jTableTurnos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -92,18 +98,18 @@ public class sistema extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tableTurnos.addMouseListener(new java.awt.event.MouseAdapter() {
+        jTableTurnos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableTurnosMouseClicked(evt);
+                jTableTurnosMouseClicked(evt);
             }
         });
-        scrollTable.setViewportView(tableTurnos);
-        if (tableTurnos.getColumnModel().getColumnCount() > 0) {
-            tableTurnos.getColumnModel().getColumn(0).setResizable(false);
-            tableTurnos.getColumnModel().getColumn(1).setResizable(false);
-            tableTurnos.getColumnModel().getColumn(2).setResizable(false);
-            tableTurnos.getColumnModel().getColumn(3).setResizable(false);
-            tableTurnos.getColumnModel().getColumn(4).setResizable(false);
+        scrollTable.setViewportView(jTableTurnos);
+        if (jTableTurnos.getColumnModel().getColumnCount() > 0) {
+            jTableTurnos.getColumnModel().getColumn(0).setResizable(false);
+            jTableTurnos.getColumnModel().getColumn(1).setResizable(false);
+            jTableTurnos.getColumnModel().getColumn(2).setResizable(false);
+            jTableTurnos.getColumnModel().getColumn(3).setResizable(false);
+            jTableTurnos.getColumnModel().getColumn(4).setResizable(false);
         }
 
         jLabel1.setText("Nombre");
@@ -137,10 +143,24 @@ public class sistema extends javax.swing.JFrame {
             }
         });
 
-        jComboHora.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14.30", "15:00", "15:30", "16:00", "16:30" }));
+        jComboHora.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30" }));
         jComboHora.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboHoraActionPerformed(evt);
+            }
+        });
+
+        btnMostrarTodo.setText("TODOS LOS TURNOS");
+        btnMostrarTodo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMostrarTodoActionPerformed(evt);
+            }
+        });
+
+        btnMostrarDia.setText("TURNOS DEL DIA");
+        btnMostrarDia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMostrarDiaActionPerformed(evt);
             }
         });
 
@@ -173,6 +193,12 @@ public class sistema extends javax.swing.JFrame {
                             .addComponent(jComboHora, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(17, 17, 17)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(84, 84, 84)
+                .addComponent(btnMostrarDia, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(btnMostrarTodo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -200,33 +226,40 @@ public class sistema extends javax.swing.JFrame {
                     .addComponent(btnModificar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollTable, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnMostrarTodo)
+                    .addComponent(btnMostrarDia))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    //METODO PARA VACIAR LOS CAMPOS DE TEXTO DEL FORMULARIO
     private void limpiarCampos() {
         txtNombre.setText("");
         txtDni.setText("");
         ftxtFecha.setText("");
     }
 
+    //METODO UTILIZADO PARA LA CARGA DE LA TABLA EN LA VISUALIZACION DE TURNOS
+    //RECIBE COMO PARAMETRO EL IDUSUARIO
+    //CARGA LA TABLA CON TODOS LOS TURNOS EN LA BASE DE DATOS
     private void cargarTabla(int idUsuario) {
 
         try {
             DefaultTableModel modelo = new DefaultTableModel();
-            tableTurnos.setModel(modelo);
+            jTableTurnos.setModel(modelo);
 
-            PreparedStatement ps = null;
-            ResultSet rs = null;
             ConexionSQL cc = new ConexionSQL();
             java.sql.Connection con = (Connection) cc.conexion();
 
             String SQL = "SELECT idturno, nombre, dni, dia_turno, hora_turno FROM turnos WHERE idusuario =" + idUsuario;
 
-            ps = con.prepareStatement(SQL);
-            rs = ps.executeQuery();
+            PreparedStatement ps = con.prepareStatement(SQL);
+            ResultSet rs = ps.executeQuery();
 
             ResultSetMetaData rsMd = rs.getMetaData();
             int cantidadColumnas = rsMd.getColumnCount();
@@ -244,9 +277,7 @@ public class sistema extends javax.swing.JFrame {
                 for (int i = 0; i < cantidadColumnas; i++) {
                     filas[i] = rs.getObject(i + 1);
                 }
-
                 modelo.addRow(filas);
-
             }
 
         } catch (Exception e) {
@@ -254,22 +285,62 @@ public class sistema extends javax.swing.JFrame {
         }
     }
 
-    private void getDatos() {
+    //METODO UTILIZADO PARA LA CARGA DE LA TABLA EN LA VISUALIZACION DE TURNOS
+    //RECIBE COMO PARAMETRO EL IDUSUARIO
+    //Y SOLO CARGA LOS TURNOS QUE COINCIDAN CON EL DIA ACTUAL(FECHA DE LA PC)
+    private void cargarTablaTurnosDelDia(int idUsuario, String fecha) {
 
-        PreparedStatement ps = null;
-        ResultSet rs = null;
         try {
+            DefaultTableModel modelo = new DefaultTableModel();
+            jTableTurnos.setModel(modelo);
 
             ConexionSQL cc = new ConexionSQL();
             java.sql.Connection con = (Connection) cc.conexion();
 
-            int fila = tableTurnos.getSelectedRow();
-            String idTurno = tableTurnos.getValueAt(fila, 0).toString();
+            String SQL = "SELECT idturno, nombre, dni, dia_turno, hora_turno FROM turnos WHERE idusuario ='" + idUsuario + "' and dia_turno='" + fecha + "'";
+
+            PreparedStatement ps = con.prepareStatement(SQL);
+            ResultSet rs = ps.executeQuery();
+
+            ResultSetMetaData rsMd = rs.getMetaData();
+            int cantidadColumnas = rsMd.getColumnCount();
+
+            modelo.addColumn("ID");
+            modelo.addColumn("Nombre");
+            modelo.addColumn("DNI");
+            modelo.addColumn("Dia");
+            modelo.addColumn("Hora");
+
+            while (rs.next()) {
+
+                Object[] filas = new Object[cantidadColumnas];
+
+                for (int i = 0; i < cantidadColumnas; i++) {
+                    filas[i] = rs.getObject(i + 1);
+                }
+                modelo.addRow(filas);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    //METODO UTILIZADO PARA LLENAR LOS CAMPOS DEL FORMULARIO DE SISTEMA
+    //DE FORMA AUTOMATICA.
+    private void getDatos() {
+
+        try {
+            ConexionSQL cc = new ConexionSQL();
+            java.sql.Connection con = (Connection) cc.conexion();
+
+            int fila = jTableTurnos.getSelectedRow();
+            String idTurno = jTableTurnos.getValueAt(fila, 0).toString();
 
             String SQL = "SELECT idturno, nombre, dni, dia_turno, hora_turno FROM turnos WHERE idturno=?";
-            ps = con.prepareStatement(SQL);
+            PreparedStatement ps = con.prepareStatement(SQL);
             ps.setString(1, idTurno);
-            rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 txtNombre.setText(rs.getString("nombre"));
@@ -284,9 +355,10 @@ public class sistema extends javax.swing.JFrame {
 
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        int fila = tableTurnos.getSelectedRow();
+        
+        int fila = jTableTurnos.getSelectedRow();
         int opcion = jComboHora.getSelectedIndex();
-        Turno turno = new Turno(idUsuario, Integer.parseInt(tableTurnos.getValueAt(fila, 0).toString()), txtNombre.getText(),
+        Turno turno = new Turno(idUsuario, Integer.parseInt(jTableTurnos.getValueAt(fila, 0).toString()), txtNombre.getText(),
                 Integer.parseInt(txtDni.getText()), jComboHora.getItemAt(opcion).toString(), ftxtFecha.getText());
 
         if (turno.eliminarTurno(turno.getIdTurno())) {
@@ -296,10 +368,11 @@ public class sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        // TODO add your handling code here:
+
         int opcion = jComboHora.getSelectedIndex();
         Turno turno = new Turno(idUsuario, txtNombre.getText(), Integer.parseInt(txtDni.getText()), jComboHora.getItemAt(opcion).toString(), ftxtFecha.getText());
-        if (turno.agregarTurno()) {
+        if (turno.validarDisponibilidadTurno()) {
+            turno.agregarTurno();
             limpiarCampos();
             cargarTabla(turno.getIdUsuario());
         }
@@ -307,13 +380,14 @@ public class sistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
-        int fila = tableTurnos.getSelectedRow();
+
+        int fila = jTableTurnos.getSelectedRow();
         int opcion = jComboHora.getSelectedIndex();
-        Turno turno = new Turno(idUsuario, Integer.parseInt(tableTurnos.getValueAt(fila, 0).toString()), txtNombre.getText(),
+        Turno turno = new Turno(idUsuario, Integer.parseInt(jTableTurnos.getValueAt(fila, 0).toString()), txtNombre.getText(),
                 Integer.parseInt(txtDni.getText()), jComboHora.getItemAt(opcion).toString(), ftxtFecha.getText());
 
-        if (turno.modificarTurno(turno.getIdTurno())) {
+        if (turno.validarDisponibilidadTurno()) {
+            turno.modificarTurno(turno.getIdTurno());
             limpiarCampos();
             cargarTabla(turno.getIdUsuario());
         }
@@ -332,28 +406,40 @@ public class sistema extends javax.swing.JFrame {
 
     }//GEN-LAST:event_txtDniActionPerformed
 
-    private void tableTurnosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableTurnosMouseClicked
+    private void jTableTurnosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableTurnosMouseClicked
         getDatos();
-    }//GEN-LAST:event_tableTurnosMouseClicked
+    }//GEN-LAST:event_jTableTurnosMouseClicked
 
     private void jComboHoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboHoraActionPerformed
-        // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jComboHoraActionPerformed
+
+    private void btnMostrarTodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarTodoActionPerformed
+        cargarTabla(idUsuario);
+    }//GEN-LAST:event_btnMostrarTodoActionPerformed
+
+    private void btnMostrarDiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarDiaActionPerformed
+        java.util.Date date = new java.util.Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String fecha = formatter.format(date);
+        cargarTablaTurnosDelDia(this.idUsuario, fecha);
+    }//GEN-LAST:event_btnMostrarDiaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnMostrarDia;
+    private javax.swing.JButton btnMostrarTodo;
     private javax.swing.JFormattedTextField ftxtFecha;
     private javax.swing.JComboBox<String> jComboHora;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JTable jTableTurnos;
     private javax.swing.JScrollPane scrollTable;
-    private javax.swing.JTable tableTurnos;
     private javax.swing.JTextField txtDni;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables

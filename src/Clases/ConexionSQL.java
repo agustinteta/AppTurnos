@@ -23,18 +23,4 @@ public class ConexionSQL {
         return (java.sql.Connection) conectar;
     }
 
-    public ResultSet getTabla(String Consulta) {
-        Connection con = conexion();
-        Statement st;
-        ResultSet datos = null;
-        try {
-            st = con.createStatement();
-            datos = st.executeQuery(Consulta);
-
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-        return datos;
-    }
-
 }

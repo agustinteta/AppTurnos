@@ -3,7 +3,6 @@ package Interfaz;
 import Clases.Usuario;
 import Clases.ConexionSQL;
 import java.sql.*;
-import javax.swing.JOptionPane;
 
 public class login extends javax.swing.JFrame {
 
