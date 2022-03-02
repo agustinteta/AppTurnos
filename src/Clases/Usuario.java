@@ -10,6 +10,7 @@ public class Usuario {
     private String nombre;
     private String contrasena;
     private int dni;
+    private String email;
 
     //Variables SQL
     ConexionSQL cc = new ConexionSQL();
@@ -21,10 +22,11 @@ public class Usuario {
         this.contrasena = contrasena;
     }
 
-    public Usuario(String nombre, String contrasena, int dni) {
+    public Usuario(String nombre, String contrasena, int dni, String email) {
         this.nombre = nombre;
         this.contrasena = contrasena;
         this.dni = dni;
+        this.email = email;
     }
 
     //METODOS GETTERS
@@ -39,6 +41,10 @@ public class Usuario {
     public String getPassword() {
         return contrasena;
     }
+    
+    public String getEmail(){
+        return email;
+    }
 
     //METODOS SETTERS
     public void setNombre(String nombre) {
@@ -51,6 +57,10 @@ public class Usuario {
 
     public void setPassword(String password) {
         this.contrasena = password;
+    }
+    
+    public void setEmail(String email){
+        this.email = email;
     }
 
     //METODO PARA OBTENER EL ID DE UN USUARIO
@@ -89,7 +99,7 @@ public class Usuario {
     //METODO PARA AGREGAR USUARIO
     public boolean agregarUsuario() {
 
-        String SQL = "INSERT INTO usuarios (dni, nombre, contrasena) VALUES (?,?,?)";
+        String SQL = "INSERT INTO usuarios (dni, nombre, contrasena, email) VALUES (?,?,?,?)";
 
         try {
             PreparedStatement pst = con.prepareStatement(SQL);
@@ -98,6 +108,7 @@ public class Usuario {
             pst.setInt(1, this.dni);
             pst.setString(2, this.nombre);
             pst.setString(3, this.contrasena);
+            pst.setString(4, this.email);
 
             pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "Usuario creado exitosamente.");

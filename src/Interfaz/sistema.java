@@ -42,6 +42,8 @@ public class sistema extends javax.swing.JFrame {
         jComboHora = new javax.swing.JComboBox<>();
         btnMostrarTodo = new javax.swing.JButton();
         btnMostrarDia = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -164,6 +166,14 @@ public class sistema extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setText("Email");
+
+        txtEmail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmailActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -181,16 +191,22 @@ public class sistema extends javax.swing.JFrame {
                             .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4))
-                        .addGap(76, 76, 76)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel4))
+                                .addGap(76, 76, 76))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(194, 194, 194)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtDni, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                             .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                             .addComponent(ftxtFecha, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                            .addComponent(jComboHora, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jComboHora, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtEmail))
                         .addGap(17, 17, 17)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
@@ -207,7 +223,11 @@ public class sistema extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtDni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -226,7 +246,7 @@ public class sistema extends javax.swing.JFrame {
                     .addComponent(btnModificar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollTable, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnMostrarTodo)
                     .addComponent(btnMostrarDia))
@@ -240,6 +260,7 @@ public class sistema extends javax.swing.JFrame {
     //METODO PARA VACIAR LOS CAMPOS DE TEXTO DEL FORMULARIO
     private void limpiarCampos() {
         txtNombre.setText("");
+        txtEmail.setText("");
         txtDni.setText("");
         ftxtFecha.setText("");
     }
@@ -256,7 +277,7 @@ public class sistema extends javax.swing.JFrame {
             ConexionSQL cc = new ConexionSQL();
             java.sql.Connection con = (Connection) cc.conexion();
 
-            String SQL = "SELECT idturno, nombre, dni, dia_turno, hora_turno FROM turnos WHERE idusuario =" + idUsuario;
+            String SQL = "SELECT idturnos, nombre, email, dni, dia_turno, hora_turno FROM turnos WHERE idusuario =" + idUsuario;
 
             PreparedStatement ps = con.prepareStatement(SQL);
             ResultSet rs = ps.executeQuery();
@@ -266,6 +287,7 @@ public class sistema extends javax.swing.JFrame {
 
             modelo.addColumn("ID");
             modelo.addColumn("Nombre");
+            modelo.addColumn("Email");
             modelo.addColumn("DNI");
             modelo.addColumn("Dia");
             modelo.addColumn("Hora");
@@ -297,7 +319,7 @@ public class sistema extends javax.swing.JFrame {
             ConexionSQL cc = new ConexionSQL();
             java.sql.Connection con = (Connection) cc.conexion();
 
-            String SQL = "SELECT idturno, nombre, dni, dia_turno, hora_turno FROM turnos WHERE idusuario ='" + idUsuario + "' and dia_turno='" + fecha + "'";
+            String SQL = "SELECT idturnos, nombre, email, dni, dia_turno, hora_turno FROM turnos WHERE idusuario ='" + idUsuario + "' and dia_turno='" + fecha + "'";
 
             PreparedStatement ps = con.prepareStatement(SQL);
             ResultSet rs = ps.executeQuery();
@@ -307,6 +329,7 @@ public class sistema extends javax.swing.JFrame {
 
             modelo.addColumn("ID");
             modelo.addColumn("Nombre");
+            modelo.addColumn("Email");
             modelo.addColumn("DNI");
             modelo.addColumn("Dia");
             modelo.addColumn("Hora");
@@ -337,13 +360,14 @@ public class sistema extends javax.swing.JFrame {
             int fila = jTableTurnos.getSelectedRow();
             String idTurno = jTableTurnos.getValueAt(fila, 0).toString();
 
-            String SQL = "SELECT idturno, nombre, dni, dia_turno, hora_turno FROM turnos WHERE idturno=?";
+            String SQL = "SELECT idturnos, nombre, email, dni, dia_turno, hora_turno FROM turnos WHERE idturnos=?";
             PreparedStatement ps = con.prepareStatement(SQL);
             ps.setString(1, idTurno);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 txtNombre.setText(rs.getString("nombre"));
+                txtEmail.setText(rs.getString("email"));
                 txtDni.setText(rs.getString("dni"));
                 ftxtFecha.setText(rs.getString("dia_turno"));
             }
@@ -358,7 +382,7 @@ public class sistema extends javax.swing.JFrame {
         
         int fila = jTableTurnos.getSelectedRow();
         int opcion = jComboHora.getSelectedIndex();
-        Turno turno = new Turno(idUsuario, Integer.parseInt(jTableTurnos.getValueAt(fila, 0).toString()), txtNombre.getText(),
+        Turno turno = new Turno(idUsuario, Integer.parseInt(jTableTurnos.getValueAt(fila, 0).toString()), txtNombre.getText(), txtEmail.getText(),
                 Integer.parseInt(txtDni.getText()), jComboHora.getItemAt(opcion).toString(), ftxtFecha.getText());
 
         if (turno.eliminarTurno(turno.getIdTurno())) {
@@ -370,7 +394,7 @@ public class sistema extends javax.swing.JFrame {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
 
         int opcion = jComboHora.getSelectedIndex();
-        Turno turno = new Turno(idUsuario, txtNombre.getText(), Integer.parseInt(txtDni.getText()), jComboHora.getItemAt(opcion).toString(), ftxtFecha.getText());
+        Turno turno = new Turno(idUsuario, txtNombre.getText(), txtEmail.getText(), Integer.parseInt(txtDni.getText()), jComboHora.getItemAt(opcion).toString(), ftxtFecha.getText());
         if (turno.validarDisponibilidadTurno()) {
             turno.agregarTurno();
             limpiarCampos();
@@ -383,7 +407,7 @@ public class sistema extends javax.swing.JFrame {
 
         int fila = jTableTurnos.getSelectedRow();
         int opcion = jComboHora.getSelectedIndex();
-        Turno turno = new Turno(idUsuario, Integer.parseInt(jTableTurnos.getValueAt(fila, 0).toString()), txtNombre.getText(),
+        Turno turno = new Turno(idUsuario, Integer.parseInt(jTableTurnos.getValueAt(fila, 0).toString()), txtNombre.getText(), txtEmail.getText(),
                 Integer.parseInt(txtDni.getText()), jComboHora.getItemAt(opcion).toString(), ftxtFecha.getText());
 
         if (turno.validarDisponibilidadTurno()) {
@@ -425,6 +449,10 @@ public class sistema extends javax.swing.JFrame {
         cargarTablaTurnosDelDia(this.idUsuario, fecha);
     }//GEN-LAST:event_btnMostrarDiaActionPerformed
 
+    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmailActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
@@ -438,9 +466,11 @@ public class sistema extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JTable jTableTurnos;
     private javax.swing.JScrollPane scrollTable;
     private javax.swing.JTextField txtDni;
+    private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 

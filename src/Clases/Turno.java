@@ -10,6 +10,7 @@ public class Turno {
     private int idUsuario;
     private int idTurno;
     private String nombre;
+    private String email;
     private int dni;
     private String horaTurno;
     private String fechaTurno;
@@ -19,18 +20,20 @@ public class Turno {
     java.sql.Connection con = (Connection) cc.conexion();
 
     //Constructores
-    public Turno(int idUsuario, String nombre, int dni, String horaTurno, String fechaTurno) {
+    public Turno(int idUsuario, String nombre, String email, int dni, String horaTurno, String fechaTurno) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
+        this.email = email;
         this.dni = dni;
         this.horaTurno = horaTurno;
         this.fechaTurno = fechaTurno;
     }
 
-    public Turno(int idUsuario, int idTurno, String nombre, int dni, String horaTurno, String fechaTurno) {
+    public Turno(int idUsuario, int idTurno, String nombre, String email, int dni, String horaTurno, String fechaTurno) {
         this.idUsuario = idUsuario;
         this.idTurno = idTurno;
         this.nombre = nombre;
+        this.email = email;
         this.dni = dni;
         this.horaTurno = horaTurno;
         this.fechaTurno = fechaTurno;
@@ -94,7 +97,7 @@ public class Turno {
     //RETORNA FALSE SI NO ES POSIBLE LA CARGA
     public boolean agregarTurno() {
 
-        String SQL = "CALL insertarEnTurnos_sp (?,?,?,?,?,?)";
+        String SQL = "INSERT INTO turnos (idusuario, nombre, email, dni, hora_turno, dia_turno ) VALUES (?,?,?,?,?,?)";
         java.util.Date date = new java.util.Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -104,12 +107,14 @@ public class Turno {
             ps = con.prepareStatement(SQL);
             ps.setInt(1, this.idUsuario);
             ps.setString(2, this.nombre);
-            ps.setInt(3, this.dni);
-            ps.setString(4, formatter.format(date));
+            ps.setString(3, this.email);
+            ps.setInt(4, this.dni);
             ps.setString(5, this.horaTurno);
             ps.setString(6, this.fechaTurno);
             ps.executeUpdate();
 
+            JavaEmail email = new JavaEmail();
+            email.enviarEmail(this.email, this.fechaTurno, this.horaTurno);
             JOptionPane.showMessageDialog(null, "Turno cargado exitosamente. ");
 
             return true;
@@ -127,13 +132,14 @@ public class Turno {
     public boolean modificarTurno(int idTurno) {
         PreparedStatement ps = null;
         try {
-            String SQL = "UPDATE turnos SET nombre=?, dni=?, dia_turno=?, hora_turno=? WHERE idturno=" + idTurno;
+            String SQL = "UPDATE turnos SET nombre=?, email=?, dni=?, dia_turno=?, hora_turno=? WHERE idturnos=" + idTurno;
             ps = con.prepareStatement(SQL);
 
             ps.setString(1, this.nombre);
-            ps.setInt(2, this.dni);
-            ps.setString(3, this.fechaTurno);
-            ps.setString(4, this.horaTurno);
+            ps.setString(2, this.email);
+            ps.setInt(3, this.dni);
+            ps.setString(4, this.fechaTurno);
+            ps.setString(5, this.horaTurno);
 
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "El turno se modifico satisfactoriamente.");
@@ -151,7 +157,7 @@ public class Turno {
     public boolean eliminarTurno(int idTurno) {
         PreparedStatement ps = null;
         try {
-            String SQL = "DELETE FROM turnos WHERE idturno=?";
+            String SQL = "DELETE FROM turnos WHERE idturnos=?";
             ps = con.prepareStatement(SQL);
 
             ps.setInt(1, this.idTurno);
